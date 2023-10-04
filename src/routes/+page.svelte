@@ -1,44 +1,22 @@
 <script lang="ts">
-    import {
-        exists,
-        BaseDirectory,
-        createDir,
-        writeFile,
-        readTextFile
-    } from "@tauri-apps/api/fs";
-
-    async function checkConfig() {
-        let pepe = await exists("config/pepe.txt", {
-            dir: BaseDirectory.AppLocalData,
-        });
-        return pepe;
-    }
-    async function createFile() {
-        await createDir("config", { dir: BaseDirectory.AppLocalData });
-        await writeFile(
-            { path: "config/pepe.txt", contents: "pepe" },
-            { dir: BaseDirectory.AppLocalData }
-        );
-        return "file created";
-    }
-    async function readFile(){
-        let pepe = await readTextFile("config/pepe.txt", {
-            dir: BaseDirectory.AppLocalData,
-        });
-        return pepe;
-    }
+    import { goto } from "$app/navigation";
+    import SimpleCard from "$lib/components/SimpleCard.svelte";
+    import { checkConfig, createConfigFile, readConfigFiles } from "$lib/filesystemUtils";
 
     checkConfig().then((res) => {
         if (!res) {
-            createFile().then((res) => {
+            createConfigFile().then((res) => {
                 console.log(res);
             });
         } else {
-            readFile().then((res) => {
+            readConfigFiles().then((res) => {
                 console.log(res);
             });
         }
     });
+    function navigateToRegister() {
+        goto("/register");
+    }
 </script>
 
-<h1 class="text-center">Welcome to SvelteKit</h1>
+<SimpleCard forwardClickAction={navigateToRegister}></SimpleCard>
